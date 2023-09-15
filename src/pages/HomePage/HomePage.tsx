@@ -1,10 +1,27 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { cfg } from "src/config/config";
+import SearchField from "src/pages/HomePage/components/SearchField";
+import CategoriesSelect from "./components/CategoriesSelect";
 
 export default function HomePage() {
     const navigate = useNavigate();
+
+    const uri = `${cfg.apiHost}/volumes?key=${cfg.bookKey}?`;
+
+    axios
+        .get(uri)
+        .then((response) => {
+            // Обработка полученных данных
+            console.log(response.data);
+        })
+        .catch((error) => {
+            // Обработка ошибок
+            console.error(error);
+        });
 
     return (
         <Box
@@ -22,7 +39,7 @@ export default function HomePage() {
                     color="text.primary"
                     gutterBottom
                 >
-                    CalcuLed
+                    Search for books
                 </Typography>
                 <Typography
                     variant="h5"
@@ -30,31 +47,18 @@ export default function HomePage() {
                     color="text.secondary"
                     paragraph
                 >
-                    Приложение предлагает быстрый и простой способ подобрать
-                    оптимальный вариант в соответствии с вашими параметрами.
+                    The app offers a quick and easy way to select book according
+                    to your wishes.
                 </Typography>
+                <SearchField />
                 <Stack
                     sx={{ pt: 4 }}
                     direction="row"
                     spacing={2}
                     justifyContent="center"
                 >
-                    <Button
-                        variant="contained"
-                        size="large"
-                        color="secondary"
-                        onClick={() => navigate("/leds-search")}
-                    >
-                        Подобрать светодиоды
-                    </Button>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        color="secondary"
-                        onClick={() => navigate("/power-units-search")}
-                    >
-                        Подобрать блоки питания
-                    </Button>
+                    <CategoriesSelect />
+                    <CategoriesSelect />
                 </Stack>
             </Container>
         </Box>
