@@ -1,9 +1,10 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { defautlCategory } from "src/models/models";
+import { RootState } from "src/store/store";
 
 export default function CategoriesSelect() {
     const dispatch = useDispatch();
-
     const setCategories = (selectedValue: string) => {
         dispatch({ type: "SET_CATEGORIES", payload: selectedValue });
     };
@@ -13,7 +14,7 @@ export default function CategoriesSelect() {
             <InputLabel>Categories</InputLabel>
             <Select
                 label="Categories"
-                defaultValue={""}
+                defaultValue={defautlCategory}
                 onChange={(e) => {
                     const selectedValue = e.target.value as string;
                     setCategories(selectedValue);

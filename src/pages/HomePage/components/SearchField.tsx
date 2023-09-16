@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function SearchField() {

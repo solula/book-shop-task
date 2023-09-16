@@ -2,12 +2,14 @@ import { Button, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cfg } from "src/config/config";
+import { Category } from "src/models/models";
 import SearchField from "src/pages/HomePage/components/SearchField";
 import { RootState } from "src/store/store";
 import CategoriesSelect from "./components/CategoriesSelect";
 import SortingSelect from "./components/SortingSelect";
+import BooksCards from "./components/BookCards";
 
 export default function HomePage() {
     const search = useSelector((state: RootState) => state.search.search);
@@ -15,6 +17,8 @@ export default function HomePage() {
         (state: RootState) => state.categories.categories
     );
     const sorting = useSelector((state: RootState) => state.sorting.sorting);
+
+    const dispatch = useDispatch();
     const handleButtonClick = () => {
         const errValidate = validate(search);
         if (errValidate) {
@@ -29,13 +33,18 @@ export default function HomePage() {
             .then((response) => {
                 // Обработка полученных данных
                 console.log(response.data);
+                const books = response.data;
+                dispatch({
+                    type: "LOAD_BOOKS",
+                    payload: books,
+                });
+                console.log(books);
             })
             .catch((error) => {
                 // Обработка ошибок
                 console.error(error);
             });
         console.log(url);
-        
     };
 
     return (
@@ -80,6 +89,7 @@ export default function HomePage() {
                     >
                         Search
                     </Button>
+                    <BooksCards />
                 </Stack>
             </Container>
         </Box>
@@ -94,7 +104,11 @@ function validate(search: string): Error | null {
     return null;
 }
 
-function makeSearchPath(search: string, categories: string, sorting: string): string {
+function makeSearchPath(
+    search: string,
+    categories: Category,
+    sorting: string
+): string {
     let searchString: string = `&q=${search}`;
     if (categories !== "all") {
         searchString += `+subject:${categories}`;

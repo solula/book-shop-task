@@ -1,4 +1,6 @@
-export interface SortingState {
+import { defaultSorting } from "src/models/models";
+
+interface SortingState {
     sorting: string;
 }
 
@@ -6,9 +8,8 @@ interface SortingAction {
     type: "SET_SORTING";
     payload: string;
 }
-
 const defaultState: SortingState = {
-    sorting: "relevance",
+    sorting: defaultSorting,
 };
 
 const sortingReducer = (
