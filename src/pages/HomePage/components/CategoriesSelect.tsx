@@ -19,7 +19,7 @@ export default function CategoriesSelect() {
                     setCategories(selectedValue);
                 }}
             >
-                <MenuItem value={""}>all</MenuItem>
+                <MenuItem value={"all"}>all</MenuItem>
                 <MenuItem value={"art"}>art</MenuItem>
                 <MenuItem value={"biography"}>biography</MenuItem>
                 <MenuItem value={"computers"}>computers</MenuItem>

@@ -19,7 +19,7 @@ export default function Header() {
                     <HomeIcon />
                 </IconButton>
                 <Typography variant="h6" component="span">
-                    CalcuLed
+                    BOOK SEARCH
                 </Typography>
             </Toolbar>
         </AppBar>

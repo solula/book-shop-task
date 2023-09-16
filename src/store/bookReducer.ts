@@ -1,25 +1,25 @@
-interface Books {}
+interface Book {}
 
-export interface BooksState {
-    books: Record<string, Books>; //по айди (1) книга
+export interface BookState {
+    books: Record<string, Book>; //по айди (1) книга
 }
 
-interface SetBooksAction {
-    type: 'SET_CATEGORIES';
-    payload: Record<string, Books>;
+interface SetBookAction {
+    type: 'SET_BOOKS';
+    payload: Record<string, Book>;
 }
 
-type BooksAction = SetBooksAction;
+type BookAction = SetBookAction;
 
-const defaultState: BooksState = {
+const defaultState: BookState = {
     books: {},
 };
 
-const booksReducer = (state: BooksState = defaultState, action: BooksAction): BooksState => {
+const booksReducer = (state: BookState = defaultState, action: BookAction): BookState => {
     //const book = state.categories["odikddjid"]
     
     switch (action.type) {
-        case 'SET_CATEGORIES':
+        case 'SET_BOOKS':
             console.log(action.payload);
             return {
                 ...state,

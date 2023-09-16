@@ -3,24 +3,27 @@ import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { cfg } from "src/config/config";
 import SearchField from "src/pages/HomePage/components/SearchField";
 import { RootState } from "src/store/store";
 import CategoriesSelect from "./components/CategoriesSelect";
+import SortingSelect from "./components/SortingSelect";
 
 export default function HomePage() {
     const search = useSelector((state: RootState) => state.search.search);
     const categories = useSelector(
         (state: RootState) => state.categories.categories
     );
+    const sorting = useSelector((state: RootState) => state.sorting.sorting);
     const handleButtonClick = () => {
-        const errValidate = validate(search, categories);
-        console.log(errValidate);
+        const errValidate = validate(search);
         if (errValidate) {
             return;
         }
-        const url = `${cfg.apiHost}?key=${cfg.bookKey}` + makeSearchPath(search, categories);
+
+        const url =
+            `${cfg.apiHost}?key=${cfg.bookKey}` +
+            makeSearchPath(search, categories, sorting);
         axios
             .get(url)
             .then((response) => {
@@ -32,6 +35,7 @@ export default function HomePage() {
                 console.error(error);
             });
         console.log(url);
+        
     };
 
     return (
@@ -65,6 +69,7 @@ export default function HomePage() {
                     <SearchField />
                     <Stack direction="row" spacing={2} justifyContent="center">
                         <CategoriesSelect />
+                        <SortingSelect />
                     </Stack>
                     <Button
                         variant="contained"
@@ -81,18 +86,21 @@ export default function HomePage() {
     );
 }
 
-function validate(search: string, categories: string): Error | null {
+function validate(search: string): Error | null {
     if (search === "") {
         return new Error("Error: search field cannot be empty.");
     }
-    
+
     return null;
 }
 
-function makeSearchPath(search: string, categories: string): string {
+function makeSearchPath(search: string, categories: string, sorting: string): string {
     let searchString: string = `&q=${search}`;
-    if (categories !== "") {
+    if (categories !== "all") {
         searchString += `+subject:${categories}`;
+    }
+    if (sorting !== "relevance") {
+        searchString += `&orderBy=newest`;
     }
     return searchString;
 }

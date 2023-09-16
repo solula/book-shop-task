@@ -8,7 +8,7 @@ interface CategoriesAction {
 }
 
 const defaultState: CategoriesState = {
-    categories: '',
+    categories: "all",
 };
 
 const categoriesReducer = (state: CategoriesState = defaultState, action: CategoriesAction): CategoriesState => {

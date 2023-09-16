@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import React from "react";
-import Footer from "./Footer";
 import Header from "./Header";
 
 export default function PageLayout({
@@ -24,9 +23,6 @@ export default function PageLayout({
                 <Header />
             </Box>
             <Box sx={{ gridArea: "content" }}>{children}</Box>
-            <Box sx={{ gridArea: "footer" }}>
-                <Footer />
-            </Box>
         </Box>
     );
 }
