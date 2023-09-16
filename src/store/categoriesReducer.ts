@@ -1,13 +1,11 @@
-interface CategoriesState {
+export interface CategoriesState {
     categories: string;
 }
 
-interface SetCategoriesAction {
+interface CategoriesAction {
     type: 'SET_CATEGORIES';
     payload: string;
 }
-
-type CategoriesAction = SetCategoriesAction;
 
 const defaultState: CategoriesState = {
     categories: '',
@@ -16,6 +14,7 @@ const defaultState: CategoriesState = {
 const categoriesReducer = (state: CategoriesState = defaultState, action: CategoriesAction): CategoriesState => {
     switch (action.type) {
         case 'SET_CATEGORIES':
+            console.log(state);
             return {
                 ...state,
                 categories: action.payload,

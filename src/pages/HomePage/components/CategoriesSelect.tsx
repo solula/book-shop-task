@@ -1,33 +1,31 @@
-import {
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-} from "@mui/material";
-import { useState } from "react";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useDispatch } from "react-redux";
 
 export default function CategoriesSelect() {
-    const [categories, setCategories] = useState("");
+    const dispatch = useDispatch();
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setCategories(event.target.value as string);
+    const setCategories = (selectedValue: string) => {
+        dispatch({ type: "SET_CATEGORIES", payload: selectedValue });
     };
 
-    console.log(categories);
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Categories</InputLabel>
+            <InputLabel>Categories</InputLabel>
             <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={categories}
                 label="Categories"
-                onChange={handleChange}
+                defaultValue={""}
+                onChange={(e) => {
+                    const selectedValue = e.target.value as string;
+                    setCategories(selectedValue);
+                }}
             >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={""}>all</MenuItem>
+                <MenuItem value={"art"}>art</MenuItem>
+                <MenuItem value={"biography"}>biography</MenuItem>
+                <MenuItem value={"computers"}>computers</MenuItem>
+                <MenuItem value={"history"}>history</MenuItem>
+                <MenuItem value={"medical"}>medical</MenuItem>
+                <MenuItem value={"poetry"}>poetry</MenuItem>
             </Select>
         </FormControl>
     );

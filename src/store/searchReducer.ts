@@ -1,14 +1,14 @@
-interface SearchState {
+export interface SearchState {
     search: string;
 }
-
-const defaultState: SearchState = {
-    search: "",
-};
 
 type SearchAction = {
     type: "SET_SEARCH";
     payload: string;
+};
+
+const defaultState: SearchState = {
+    search: "",
 };
 
 const searchReducer = (
@@ -17,6 +17,7 @@ const searchReducer = (
 ): SearchState => {
     switch (action.type) {
         case "SET_SEARCH":
+            console.log(action.payload);
             return {
                 ...state,
                 search: action.payload,
