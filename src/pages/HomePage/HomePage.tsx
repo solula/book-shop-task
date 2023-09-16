@@ -4,12 +4,13 @@ import Container from "@mui/material/Container";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { cfg } from "src/config/config";
-import { Category } from "src/models/models";
+import { Book, Category } from "src/models/models";
 import SearchField from "src/pages/HomePage/components/SearchField";
 import { RootState } from "src/store/store";
+import BooksCards from "./components/BookCards";
 import CategoriesSelect from "./components/CategoriesSelect";
 import SortingSelect from "./components/SortingSelect";
-import BooksCards from "./components/BookCards";
+import { useState } from "react";
 
 export default function HomePage() {
     const search = useSelector((state: RootState) => state.search.search);
@@ -17,6 +18,8 @@ export default function HomePage() {
         (state: RootState) => state.categories.categories
     );
     const sorting = useSelector((state: RootState) => state.sorting.sorting);
+
+    const [showBooks, setShowBooks] = useState(false);
 
     const dispatch = useDispatch();
     const handleButtonClick = () => {
@@ -32,19 +35,18 @@ export default function HomePage() {
             .get(url)
             .then((response) => {
                 // Обработка полученных данных
-                console.log(response.data);
-                const books = response.data;
+                const books: Book[] = response.data.items;
                 dispatch({
                     type: "LOAD_BOOKS",
                     payload: books,
                 });
-                console.log(books);
+                setShowBooks(true);
             })
             .catch((error) => {
                 // Обработка ошибок
                 console.error(error);
             });
-        console.log(url);
+            
     };
 
     return (
@@ -89,7 +91,7 @@ export default function HomePage() {
                     >
                         Search
                     </Button>
-                    <BooksCards />
+                    {showBooks && <BooksCards />}
                 </Stack>
             </Container>
         </Box>

@@ -1,49 +1,44 @@
+import { type } from "os";
 import { Book } from "src/models/models";
 
-interface BooksState {
-    books: Record<string, Book>; //по айди (1) книга
+// Определение типа состояния
+export interface BooksState {
+  books: Book[];
 }
 
+// Начальное состояние
 const initialState: BooksState = {
-    books: {},
-};
-
-const defaultState: BooksState = {
-    books: {},
+  books: [],
 };
 
 interface LoadBooksAction {
     type: "LOAD_BOOKS";
-    payload: Record<string, Book>;
+    payload: Book[];
 }
 
 interface SaveBooksAction {
-    type: "SAVE_BOOKS";
-    payload: Record<string, Book>;
+    type: "ADD_BOOKS";
+    payload: Book[];
 }
 
 type BooksAction = LoadBooksAction | SaveBooksAction;
 
-const booksReducer = (
-    state: BooksState = defaultState,
-    action: BooksAction
-): BooksState => {
-    //const book = state.categories["odikddjid"]
-
-    switch (action.type) {
-        case "LOAD_BOOKS":
-            return {
-                ...state,
-                books: action.payload,
-            };
-        case "SAVE_BOOKS":
-            return {
-                ...state,
-                books: { ...state.books, ...action.payload },
-            };
-        default:
-            return state;
-    }
+// Редьюсер
+const booksReducer = (state: BooksState = initialState, action: BooksAction): BooksState => {
+  switch (action.type) {
+    case "LOAD_BOOKS":
+      return {
+        ...state,
+        books: action.payload,
+      };
+    case "ADD_BOOKS":
+      return {
+        ...state,
+        books: [...state.books, ...action.payload],
+      };
+    default:
+      return state;
+  }
 };
 
 export default booksReducer;
