@@ -4,11 +4,13 @@ import { Book } from "src/models/models";
 // Определение типа состояния
 export interface BooksState {
   books: Book[];
+  loadedCount: number;
 }
 
 // Начальное состояние
 const initialState: BooksState = {
   books: [],
+  loadedCount: 0,
 };
 
 interface LoadBooksAction {
@@ -30,11 +32,13 @@ const booksReducer = (state: BooksState = initialState, action: BooksAction): Bo
       return {
         ...state,
         books: action.payload,
+        loadedCount: 30,
       };
     case "ADD_BOOKS":
       return {
         ...state,
         books: [...state.books, ...action.payload],
+        loadedCount: state.loadedCount + 30,
       };
     default:
       return state;

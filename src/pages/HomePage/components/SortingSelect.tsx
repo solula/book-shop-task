@@ -1,5 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { defaultSorting } from "src/models/models";
 
 export default function SortingSelect() {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ export default function SortingSelect() {
             <InputLabel>Sorting by</InputLabel>
             <Select
                 label="Sorting by"
-                defaultValue={""}
+                defaultValue={defaultSorting}
                 onChange={(e) => {
                     const selectedValue = e.target.value as string;
                     setSorting(selectedValue);

@@ -5,10 +5,12 @@ export interface Book {
         authors: string[];
         description: string;
         categories: string[];
-        imageLinks: {
-            smallThumbnail: string;
-            thumbnail: string;
-        };
+        imageLinks:
+            | {
+                  smallThumbnail: string;
+                  thumbnail: string;
+              }
+            | undefined;
     };
 }
 
@@ -22,8 +24,5 @@ export type Category =
     | "poetry";
 export const defaultCategory = "all";
 
-
-export type Sorting =
-    | "newest"
-    | "relevance";
+export type Sorting = "newest" | "relevance";
 export const defaultSorting = "relevance";

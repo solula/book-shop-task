@@ -9,6 +9,7 @@ export default function SearchField() {
 
     return (
         <TextField
+            required
             label="Book title"
             onChange={(e) => {
                 const selectedValue = e.target.value as string;

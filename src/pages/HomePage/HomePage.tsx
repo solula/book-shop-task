@@ -2,51 +2,51 @@ import { Button, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { cfg } from "src/config/config";
-import { Book, Category } from "src/models/models";
+import { useContext, useState } from "react";
+import { useDispatch } from "react-redux";
+import Loading from "src/components/ui/Loading";
+import AlertContext from "src/contexts/alertContext";
+import useSearchPath from "src/hooks/useSearchPath";
+import { Book } from "src/models/models";
 import SearchField from "src/pages/HomePage/components/SearchField";
-import { RootState } from "src/store/store";
 import BooksCards from "./components/BookCards";
 import CategoriesSelect from "./components/CategoriesSelect";
 import SortingSelect from "./components/SortingSelect";
-import { useState } from "react";
 
 export default function HomePage() {
-    const search = useSelector((state: RootState) => state.search.search);
-    const categories = useSelector(
-        (state: RootState) => state.categories.categories
-    );
-    const sorting = useSelector((state: RootState) => state.sorting.sorting);
-
     const [showBooks, setShowBooks] = useState(false);
-
+    const [numberOfBooks, setNumberOfBooks] = useState(0);
     const dispatch = useDispatch();
-    const handleButtonClick = () => {
-        const errValidate = validate(search);
-        if (errValidate) {
-            return;
-        }
+    const makeSearchPath = useSearchPath();
+    const { showAlert } = useContext(AlertContext);
 
-        const url =
-            `${cfg.apiHost}?key=${cfg.bookKey}` +
-            makeSearchPath(search, categories, sorting);
+    const [loading, setLoading] = useState(false);
+
+    const handleFormSumbit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        setLoading(true);
+        const url = makeSearchPath(0);
         axios
             .get(url)
             .then((response) => {
-                // Обработка полученных данных
                 const books: Book[] = response.data.items;
                 dispatch({
                     type: "LOAD_BOOKS",
                     payload: books,
                 });
                 setShowBooks(true);
+                setNumberOfBooks(response.data.totalItems);
+                setLoading(false);
             })
             .catch((error) => {
-                // Обработка ошибок
-                console.error(error);
+                showAlert(
+                    error?.response?.data?.error?.message
+                        ? error.response.data.error.message
+                        : "Internal error"
+                );
+                setLoading(false);
             });
-            
     };
 
     return (
@@ -58,7 +58,7 @@ export default function HomePage() {
                 justifyContent: "center",
             }}
         >
-            <Container maxWidth="md" sx={{ mb: 8 }}>
+            <Container maxWidth="lg" sx={{ mb: 8 }}>
                 <Typography
                     variant="h2"
                     align="center"
@@ -76,7 +76,13 @@ export default function HomePage() {
                     This app offers a quick and easy way to select book
                     according to your wishes.
                 </Typography>
-                <Stack direction="column" spacing={2} justifyContent="center">
+                <Stack
+                    component={"form"}
+                    onSubmit={handleFormSumbit}
+                    direction="column"
+                    spacing={2}
+                    justifyContent="center"
+                >
                     <SearchField />
                     <Stack direction="row" spacing={2} justifyContent="center">
                         <CategoriesSelect />
@@ -87,36 +93,29 @@ export default function HomePage() {
                         size="large"
                         color="secondary"
                         fullWidth
-                        onClick={handleButtonClick}
+                        type="submit"
                     >
                         Search
                     </Button>
-                    {showBooks && <BooksCards />}
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <>
+                            {numberOfBooks > 0 && (
+                                <Typography
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    {`${numberOfBooks} books found`}
+                                </Typography>
+                            )}
+                            {showBooks && <BooksCards />}
+                        </>
+                    )}
                 </Stack>
             </Container>
         </Box>
     );
-}
-
-function validate(search: string): Error | null {
-    if (search === "") {
-        return new Error("Error: search field cannot be empty.");
-    }
-
-    return null;
-}
-
-function makeSearchPath(
-    search: string,
-    categories: Category,
-    sorting: string
-): string {
-    let searchString: string = `&q=${search}`;
-    if (categories !== "all") {
-        searchString += `+subject:${categories}`;
-    }
-    if (sorting !== "relevance") {
-        searchString += `&orderBy=newest`;
-    }
-    return searchString;
 }

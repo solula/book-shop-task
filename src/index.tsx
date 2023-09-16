@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import App from "src/App";
 import { cfg } from "src/config/config";
 import theme from "src/theme/theme";
+import AlertProvider from "./providers/AlertProvider";
 import store from "./store/store";
 
 console.log(`App started with config ${JSON.stringify(cfg)}`);
@@ -22,7 +23,9 @@ root.render(
         <Provider store={store}>
             <CssBaseline />
             <ApolloProvider client={client}>
-                <App />
+                <AlertProvider defaultMessage={"Внутренная ошибка"}>
+                    <App />
+                </AlertProvider>
             </ApolloProvider>
         </Provider>
     </ThemeProvider>
